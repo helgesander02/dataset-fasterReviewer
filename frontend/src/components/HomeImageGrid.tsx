@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { fetchImages, getImageUrl } from '@/services/api';
-import { useJobDataset } from './JobDatasetContext';
 import '@/styles/HomeImageGrid.css';
+import { useJobDataset } from './JobDatasetContext';
+
 
 interface Image {
   name: string;

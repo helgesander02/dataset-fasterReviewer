@@ -8,8 +8,8 @@ import { JobDatasetProvider } from '@/components/JobDatasetContext';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'PII Image Verify Viewer',
-  description: 'A simple image viewer for PII verification',
+  title: 'Dataset Faster Reviewer',
+  description: 'A tool to quickly review datasets and jobs',
 };
 
 export default function RootLayout({

@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { fetchJobs, fetchDatasets } from '@/services/api';
+import '@/styles/HomeLeftSidebar.css';
 import { useJobDataset } from './JobDatasetContext';
 import JobSelect from './LeftJobSelect';
 import DatasetGrid from './LeftDatasetGrid';
 import Pagination from './LeftPagination';
 import LoadingIndicator from './LeftLoadingIndicator';
-import '@/styles/HomeLeftSidebar.css';
+
 
 export default function LeftSidebar() {
   const [jobs, setJobs] = useState<string[]>([]);
@@ -82,7 +83,7 @@ export default function LeftSidebar() {
   return (
     <div className="sidebar-container">
       <div className="sidebar-header">
-        <p className="sidebar-title">Image Verify Viewer</p>
+        <p className="sidebar-title">Dataset Faster Reviewer</p>
       </div>
       <JobSelect jobs={jobs} selectedJob={selectedJob} onJobSelect={handleJobSelect} loading={loading} />
       {selectedJob && (

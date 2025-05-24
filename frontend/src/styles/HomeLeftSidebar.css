@@ -9,9 +9,10 @@
   }
   
 .sidebar-title {
-    font-weight: 700;
-    font-size: 1.125rem;
-  }
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #1e3a8a; 
+}
   
 .job-select-container {
     margin-bottom: 1rem;
@@ -22,11 +23,12 @@
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 0.25rem;
+    color: #000000;
   }
   
 .dataset-container {
     overflow: auto;
-    height: 42rem;
+    height: calc(100vh - 12rem);
     margin-bottom: 1rem;
     background-color: white;
     border: 1px solid #e5e7eb;
@@ -55,6 +57,7 @@
     justify-content: center;
     font-size: 0.75rem;
     cursor: pointer;
+    color: #000000;
   }
   
 .dataset-item:hover {
@@ -64,6 +67,7 @@
 .dataset-item-selected {
     border-color: #3b82f6;
     background-color: #dbeafe;
+    color: #1e3a8a;
   }
   
 .pagination-container {

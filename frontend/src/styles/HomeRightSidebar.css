@@ -1,28 +1,23 @@
-/* HomeRightSidebar.css */
-
-/* 容器 */
 .right-sidebar {
-  width: 16.666667%; /* w-1/6 */
-  background-color: #F3F4F6; /* bg-gray-100 */
-  padding: 0.5rem; /* p-2 */
+  width: 16.666667%; 
+  background-color: #F3F4F6; 
+  padding: 0.5rem; 
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* 操作按钮区域 */
 .action-buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* gap-2 */
-  margin-bottom: 1rem; /* mb-4 */
+  gap: 0.5rem; 
+  margin-bottom: 1rem; 
 }
 
-/* 公用按钮 */
 .btn {
   width: 100%;
-  padding: 0.5rem 1rem; /* py-2 px-4 */
-  border-radius: 0.375rem; /* rounded */
+  padding: 0.5rem 1rem; 
+  border-radius: 0.375rem; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,29 +26,26 @@
   transition: background-color 0.2s;
 }
 .btn:disabled {
-  background-color: #D1D5DB; /* bg-gray-400 */
+  background-color: #D1D5DB;
   cursor: not-allowed;
 }
 
-/* Review 按钮 */
 .btn-review {
-  background-color: #3B82F6; /* bg-blue-500 */
+  background-color: #3B82F6; 
   color: white;
 }
 .btn-review:hover:not(:disabled) {
-  background-color: #2563EB; /* bg-blue-600 */
+  background-color: #2563EB;
 }
 
-/* Save 按钮 */
 .btn-save {
-  background-color: #10B981; /* bg-green-500 */
+  background-color: #10B981;
   color: white;
 }
 .btn-save:hover:not(:disabled) {
-  background-color: #059669; /* bg-green-600 */
+  background-color: #059669; 
 }
 
-/* 按钮 loading 动画 */
 .loading-spinner {
   border: 2px solid transparent;
   border-bottom-color: white;
@@ -66,19 +58,18 @@
   to { transform: rotate(360deg); }
 }
 
-/* 文件变更记录 区域 */
 .change-log {
   flex: 1;
-  border: 1px dashed #D1D5DB; /* border-gray-300 */
+  border: 1px dashed #D1D5DB; 
   background-color: white;
-  border-radius: 0.375rem; /* rounded */
-  margin-bottom: 1rem; /* mb-4 */
-  padding: 0.5rem; /* p-2 */
+  border-radius: 0.375rem; 
+  margin-bottom: 1rem; 
+  padding: 0.5rem; 
   overflow: auto;
 }
 .change-log .title {
-  font-size: 0.875rem; /* text-sm */
-  color: #374151; /* text-gray-700 */
+  font-size: 0.875rem;
+  color: #374151; 
   font-weight: 500;
   margin-bottom: 0.5rem;
   display: flex;
@@ -86,14 +77,14 @@
   gap: 0.5rem;
 }
 .change-log .empty {
-  font-size: 0.75rem; /* text-xs */
-  color: #6B7280; /* text-gray-500 */
+  font-size: 0.75rem; 
+  color: #6B7280; 
   font-style: italic;
 }
 .change-log .group {
   margin-bottom: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+  border-bottom: 1px solid #E5E7EB; 
 }
 .change-log .group:last-child {
   border-bottom: none;
@@ -106,10 +97,10 @@
 }
 .change-log .group-count {
   font-size: 0.75rem;
-  color: #4B5563; /* text-gray-600 */
+  color: #4B5563; 
 }
 .change-log .file-list {
-  max-height: 5rem; /* max-h-20 */
+  max-height: 5rem; 
   overflow-y: auto;
 }
 .change-log .file-item {
@@ -127,24 +118,22 @@
   border-top: 1px solid #E5E7EB;
 }
 
-/* 选择状态 */
 .status {
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.875rem; 
   margin-bottom: 0.5rem;
 }
 .status .ok {
-  color: #059669; /* text-green-600 */
+  color: #059669; 
 }
 .status .warn {
-  color: #F97316; /* text-orange-500 */
+  color: #F97316; 
 }
 
-/* 保存成功提示 */
 .save-success {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   font-size: 0.875rem;
-  color: #059669; /* text-green-600 */
+  color: #059669; 
   margin-bottom: 0.5rem;
 }
