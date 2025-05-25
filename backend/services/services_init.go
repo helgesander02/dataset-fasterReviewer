@@ -10,7 +10,7 @@ import (
 type DataManager struct {
     ImageRoot           string
     ParentData   	    models.Parent
-    JobCache        	map[string]models.Job
+    JobCache        	models.JobCache
     PendingReviewData 	models.PendingReview
 }
 
@@ -33,7 +33,7 @@ func (dm *DataManager) SetupServices() {
         dm.ParentData = models.NewParentData()
         log.Println("Initialized ParentData")
     }
-    if dm.JobCache == nil {
+    if dm.JobCache.Jobs == nil {
         dm.JobCache = models.NewJobCache()
         log.Println("Initialized JobCache")
     }

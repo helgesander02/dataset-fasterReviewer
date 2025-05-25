@@ -27,7 +27,7 @@ func (dm *DataManager) ConcurrentJobDetailsScanner(jobName string) (models.Job, 
         return models.NewJob(jobName), false
     }
 
-    job, exists := dm.JobCache[jobName]
+    job, exists := dm.GetJobCache(jobName)
     if exists {
         log.Printf("Job found in cache: %s", jobName)
         return job, true
@@ -37,18 +37,4 @@ func (dm *DataManager) ConcurrentJobDetailsScanner(jobName string) (models.Job, 
     log.Printf("Job not found in cache, scanning: %s", jobName)
     dm.MergeJobCache(job)
     return job, true
-}
-
-
-func (dm *DataManager) MergeJobCache(job models.Job) {
-    if len(dm.JobCache) >= 3 {
-        for key := range dm.JobCache {
-            log.Printf("Removing job from cache: %s", key)
-            delete(dm.JobCache, key)
-            break
-        }
-    }
-
-    dm.JobCache[job.Name] = job
-    log.Printf("Added job to cache: %s", job.Name)
 }

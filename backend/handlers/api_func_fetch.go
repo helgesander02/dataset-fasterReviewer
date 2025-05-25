@@ -1,7 +1,15 @@
 package handlers
 
 import (
-	"net/http"
+    "log"
+    "bytes"
+    "encoding/base64"
+    "image"
+    "image/jpeg"
+    "net/http"
+    "os"
+
+    "github.com/nfnt/resize" // 第三方包，用於調整圖片大小
 )
 
 func (handle *Handle) FolderStructureHandler(w http.ResponseWriter, r *http.Request) {
@@ -54,20 +62,65 @@ func (handle *Handle) getDatasets(w http.ResponseWriter, r *http.Request) {
 
 func (handle *Handle) getImages(w http.ResponseWriter, r *http.Request) {
     if !requireMethod(w, r, http.MethodGet) {
-		return
-	}
+        return
+    }
 
-	jobName := r.URL.Query().Get("job")
-	datasetName := r.URL.Query().Get("dataset")
-	if jobName == "" || datasetName == "" {
-		http.Error(w, "Missing job or dataset parameter", http.StatusBadRequest)
-		return
-	}
-	if !handle.DM.JobExists(jobName) {
-		http.Error(w, "Job not found", http.StatusNotFound)
-		return
-	}
+    jobName := r.URL.Query().Get("job")
+    datasetName := r.URL.Query().Get("dataset")
+    if jobName == "" || datasetName == "" {
+        http.Error(w, "Missing job or dataset parameter", http.StatusBadRequest)
+        return
+    }
+    if !handle.DM.JobExists(jobName) {
+        http.Error(w, "Job not found", http.StatusNotFound)
+        return
+    }
 
-	images := handle.DM.GetParentDataAllImages(jobName, datasetName)
-	writeJSON(w, http.StatusOK, images)
+    cachedImages, exists := handle.DM.GetImagesCache(jobName, datasetName)
+    if  exists {
+        writeJSON(w, http.StatusOK, cachedImages)
+        return
+    }
+
+    images := handle.DM.GetParentDataAllImages(jobName, datasetName)
+    var compressedImages []map[string]string
+    for _, img := range images {
+        base64Img := compressImages(img.Path)
+        compressedImages = append(compressedImages, map[string]string{
+            "name": img.Name,
+            "data": base64Img,
+        })
+    }
+
+    if handle.DM.JobCache.ImagesCache[jobName] == nil {
+        handle.DM.JobCache.ImagesCache[jobName] = make(map[string][]map[string]string)
+    }
+    handle.DM.JobCache.ImagesCache[jobName][datasetName] = compressedImages
+    writeJSON(w, http.StatusOK, compressedImages)
+}
+
+func compressImages(imgPath string) string {
+    file, err := os.Open(imgPath)
+    if err != nil {
+        log.Println("Failed to open image: "+err.Error())
+        return ""
+    }
+    defer file.Close()
+
+    decodedImg, _, err := image.Decode(file)
+    if err != nil {
+        log.Println("Failed to decode image: " + err.Error())
+        return ""
+    }
+    resizedImg := resize.Resize(150, 0, decodedImg, resize.Lanczos3)
+
+    var buf bytes.Buffer
+    err = jpeg.Encode(&buf, resizedImg, nil)
+    if err != nil {
+        log.Println("Failed to encode image: " + err.Error())
+        return ""
+    }
+
+    base64Img := base64.StdEncoding.EncodeToString(buf.Bytes())
+    return base64Img
 }

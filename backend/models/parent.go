@@ -7,19 +7,12 @@ func NewParentData() Parent {
 	}
 }
 
-
-func NewJobCache() map[string]Job {
-	return make(map[string]Job)
-}
-
-
 func NewJob(job_name string) Job {
 	return Job{
 		Name:     job_name,
 		Datasets: []Dataset{},
 	}
 }
-
 
 func NewDataset(dataset_name string) Dataset {
 	return Dataset{

@@ -11,6 +11,13 @@ type PendingReviewItem struct {
     Image   string `json:"imagePath"`
 }
 
+
+type JobCache struct {
+    Jobs map[string]Job `json:"jobs"`
+    ImagesCache map[string]map[string][]map[string]string `json:"images_cache"`
+}
+
+
 type Parent struct {
     Jobs []string `json:"jobs"`
 }
