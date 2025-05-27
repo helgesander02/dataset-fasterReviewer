@@ -2,8 +2,8 @@ package services
 
 
 import (
-	"encoding/json"
 	"log"
+    "encoding/json"
 	"backend/models"
 )
 
@@ -15,17 +15,22 @@ func (dm *DataManager) SavePendingReviewData(body *json.Decoder) int {
         log.Println("Invalid request format")
         return 0 
     }
-    if len(items) == 0 {
-        log.Println("Empty list provided")
-        return 0 
-    }
 
     pending := models.NewPendingReview()
-    pending.Items = items
-    dm.PendingReviewData.MergePendingReviewItems(pending)
-    log.Println(dm.PendingReviewData)
-    log.Printf("SavePendingReview: loaded %d items across %d jobs", len(items), len(pending.Items))
-    return len(items) 
+    if len(items) == 0 {
+        log.Println("Empty list provided")
+        dm.PendingReviewData.MergePendingReviewItems(pending)
+        log.Println("SavePendingReview: cleaned up pending review items")
+        return -1
+
+    } else {
+        pending.Items = items
+        dm.PendingReviewData.MergePendingReviewItems(pending)
+        log.Println(dm.PendingReviewData)
+        log.Printf("SavePendingReview: loaded %d items across %d jobs", len(items), len(pending.Items))
+        return len(items) 
+
+    }
 }
 
 
@@ -37,4 +42,3 @@ func (dm *DataManager) GetPendingReviewItems() []models.PendingReviewItem {
 func (dm *DataManager) ClearPendingReviewData() {
 	dm.PendingReviewData.ClearPendingReviewItems()
 }
-

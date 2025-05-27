@@ -67,6 +67,7 @@ export const getImageUrl = (job: string, dataset: string, imageName: string) =>
 
 export const savePendingReview = async (data: any) => {
     try {
+        console.log('Saving pending review data:', data);
         const response = await api.post('/api/savePendingReview', data.images);
         console.log('Saved pending review data:', response.data);
         return response.data;

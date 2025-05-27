@@ -18,5 +18,3 @@ func NewHandle(root string) *Handle {
 func (handle *Handle) SetupAPI() {
 	handle.DM.ConcurrentJobScanner()
 }
-
-

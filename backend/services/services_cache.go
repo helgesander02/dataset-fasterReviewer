@@ -27,4 +27,3 @@ func (dm *DataManager) MergeJobCache(job models.Job) {
     dm.JobCache.Jobs[job.Name] = job
     log.Printf("Added job to cache: %s", job.Name)
 }
-

@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from 'react';
-import { savePendingReview } from '@/services/api';
-import '@/styles/HomeRightSidebar.css';
 import { useJobDataset } from './JobDatasetContext';
+import { savePendingReview } from '@/services/api';
+import { useState } from 'react';
+import '@/styles/HomeRightSidebar.css';
 import ActionButtons from './RightActionButtons';
 import FileChangeLog from './RightFileChangeLog';
 import SaveButton from './RightSaveButton';
 import Status from './RightStatus';
-
+import HomeReview from './HomeReview';
 
 export default function RightSidebar() {
   const { selectedJob, selectedDataset, cachedImages } = useJobDataset();
@@ -55,6 +55,10 @@ export default function RightSidebar() {
     setIsReviewOpen(true);
   };
 
+  const handleCloseReview = () => {
+    setIsReviewOpen(false);
+  };
+
   const groupedImages = cachedImages.reduce((acc, img) => {
     const key = `${img.job}/${img.dataset}`;
     if (!acc[key]) {
@@ -78,6 +82,11 @@ export default function RightSidebar() {
           disabled={!selectedJob || !selectedDataset || cachedImages.length === 0 || loading} 
         />
       </div>
+      
+      <HomeReview 
+        isOpen={isReviewOpen} 
+        onClose={handleCloseReview} 
+      />
     </div>
   );
 }

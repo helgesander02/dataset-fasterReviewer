@@ -1,15 +1,18 @@
 package handlers
 
 import (
-    "log"
     "bytes"
     "encoding/base64"
     "image"
-    "image/jpeg"
-    "net/http"
+    "log"
     "os"
+    "net/http"
 
-    "github.com/nfnt/resize" // 第三方包，用於調整圖片大小
+    "github.com/nfnt/resize"
+    "github.com/chai2010/webp"
+    _ "image/jpeg"
+    _ "image/png"
+    _ "image/gif"
 )
 
 func (handle *Handle) FolderStructureHandler(w http.ResponseWriter, r *http.Request) {
@@ -100,27 +103,28 @@ func (handle *Handle) getImages(w http.ResponseWriter, r *http.Request) {
 }
 
 func compressImages(imgPath string) string {
+    log.Println("Processing image:", imgPath)
     file, err := os.Open(imgPath)
     if err != nil {
-        log.Println("Failed to open image: "+err.Error())
+        log.Println("Failed to open image:", err)
         return ""
     }
     defer file.Close()
 
-    decodedImg, _, err := image.Decode(file)
+    decodedImg, format, err := image.Decode(file)
     if err != nil {
-        log.Println("Failed to decode image: " + err.Error())
+        log.Printf("Failed to decode image (format: %s): %v\n", format, err)
         return ""
     }
+
     resizedImg := resize.Resize(150, 0, decodedImg, resize.Lanczos3)
 
     var buf bytes.Buffer
-    err = jpeg.Encode(&buf, resizedImg, nil)
-    if err != nil {
-        log.Println("Failed to encode image: " + err.Error())
+    opts := &webp.Options{Lossless: false, Quality: 25}
+    if err := webp.Encode(&buf, resizedImg, opts); err != nil {
+        log.Println("Failed to encode WebP:", err)
         return ""
     }
 
-    base64Img := base64.StdEncoding.EncodeToString(buf.Bytes())
-    return base64Img
+    return base64.StdEncoding.EncodeToString(buf.Bytes())
 }
