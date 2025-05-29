@@ -1,9 +1,5 @@
 import { FileText } from 'lucide-react';
-
-interface FileChangeLogProps {
-  groupedImages: Record<string, any[]>;
-  cachedImages: any[];
-}
+import { FileChangeLogProps } from '@/types/HomeRightSidebar';
 
 export default function FileChangeLog({ groupedImages, cachedImages }: FileChangeLogProps) {
   return (

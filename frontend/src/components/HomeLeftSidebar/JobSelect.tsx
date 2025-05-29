@@ -1,11 +1,7 @@
-import React from 'react';
+"use client";
 
-interface JobSelectProps {
-  jobs: string[];
-  selectedJob: string;
-  onJobSelect: (job: string) => void;
-  loading: boolean;
-}
+import React from 'react';
+import { JobSelectProps } from '@/types/HomeLeftSidebar';
 
 export default function JobSelect({ jobs, selectedJob, onJobSelect, loading }: JobSelectProps) {
   return (

@@ -1,14 +1,15 @@
+"use client";
+
 import React from 'react';
+import { DatasetGridProps } from '@/types/HomeLeftSidebar';
 
-interface DatasetGridProps {
-  datasets: string[];
-  selectedDataset: string;
-  onDatasetSelect: (dataset: string) => void;
-  currentPage: number;
-  datasetsPerPage: number;
-}
-
-export default function DatasetGrid({ datasets, selectedDataset, onDatasetSelect, currentPage, datasetsPerPage }: DatasetGridProps) {
+export default function DatasetGrid({ 
+  datasets, 
+  selectedDataset, 
+  onDatasetSelect, 
+  currentPage, 
+  datasetsPerPage 
+}: DatasetGridProps) {
   const getCurrentPageDatasets = () => {
     const startIndex = currentPage * datasetsPerPage;
     return datasets.slice(startIndex, startIndex + datasetsPerPage);

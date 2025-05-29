@@ -42,6 +42,7 @@ func main() {
     http.HandleFunc("/api/getJobs", handle.CORSGetJobs())
     http.HandleFunc("/api/getDatasets", handle.CORSGetDatasets())
     http.HandleFunc("/api/getImages", handle.CORSGetImages())
+    http.HandleFunc("/api/getBase64Images", handle.CORSGetBase64Images())
     http.HandleFunc("/api/savePendingReview", handle.CORSSavePendingReview())
     http.HandleFunc("/api/getPendingReview", handle.CORSGetPendingReview())
     http.HandleFunc("/api/approvedRemove", handle.CORSApprovedRemove())

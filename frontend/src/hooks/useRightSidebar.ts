@@ -1,16 +1,11 @@
 "use client";
 
-import { useJobDataset } from './JobDatasetContext';
-import { savePendingReview } from '@/services/api';
 import { useState } from 'react';
-import '@/styles/HomeRightSidebar.css';
-import ActionButtons from './RightActionButtons';
-import FileChangeLog from './RightFileChangeLog';
-import SaveButton from './RightSaveButton';
-import Status from './RightStatus';
-import HomeReview from './HomeReview';
+import { useJobDataset } from '@/components/JobDatasetContext';
+import { savePendingReview } from '@/services/api';
+import { RightSidebarState, RightSidebarActions, SaveData, CachedImage } from '@/types/HomeRightSidebar';
 
-export default function RightSidebar() {
+export function useRightSidebar(): RightSidebarState & RightSidebarActions {
   const { selectedJob, selectedDataset, cachedImages } = useJobDataset();
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,7 +20,7 @@ export default function RightSidebar() {
       setLoading(true);
       setSaveSuccess(false);
       
-      const saveData = {
+      const saveData: SaveData = {
         job: selectedJob,
         dataset: selectedDataset,
         images: cachedImages.map(img => ({
@@ -45,7 +40,7 @@ export default function RightSidebar() {
       
     } catch (error) {
       console.error('Error saving pending review:', error);
-      alert('保存失敗！請稍後再試。');
+      alert('Save failed! Please try again later');
     } finally {
       setLoading(false);
     }
@@ -66,27 +61,17 @@ export default function RightSidebar() {
     }
     acc[key].push(img);
     return acc;
-  }, {} as Record<string, typeof cachedImages>);
+  }, {} as Record<string, CachedImage[]>);
 
-  return (
-    <div className="right-sidebar">
-      <ActionButtons onReview={handleReview} loading={loading} />
-      <FileChangeLog groupedImages={groupedImages} cachedImages={cachedImages} />
-      <div className="mt-auto">
-        <Status selectedJob={selectedJob} selectedDataset={selectedDataset} />
-        <SaveButton 
-          onSave={handleSave} 
-          loading={loading} 
-          saveSuccess={saveSuccess} 
-          cachedImages={cachedImages} 
-          disabled={!selectedJob || !selectedDataset || cachedImages.length === 0 || loading} 
-        />
-      </div>
-      
-      <HomeReview 
-        isOpen={isReviewOpen} 
-        onClose={handleCloseReview} 
-      />
-    </div>
-  );
+  return {
+    // State
+    isReviewOpen,
+    loading,
+    saveSuccess,
+    groupedImages,
+    // Actions
+    handleSave,
+    handleReview,
+    handleCloseReview
+  };
 }

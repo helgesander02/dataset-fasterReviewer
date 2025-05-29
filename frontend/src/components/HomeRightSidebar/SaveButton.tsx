@@ -1,12 +1,5 @@
 import { Save, Clock } from 'lucide-react';
-
-interface SaveButtonProps {
-  onSave: () => void;
-  loading: boolean;
-  saveSuccess: boolean;
-  cachedImages: any[];
-  disabled: boolean;
-}
+import { SaveButtonProps } from '@/types/HomeRightSidebar';
 
 export default function SaveButton({ onSave, loading, saveSuccess, cachedImages, disabled }: SaveButtonProps) {
   return (
@@ -14,7 +7,7 @@ export default function SaveButton({ onSave, loading, saveSuccess, cachedImages,
       {saveSuccess && (
         <div className="save-success">
           <Clock size={12} />
-          保存成功！
+          Saved successfully!
         </div>
       )}
       

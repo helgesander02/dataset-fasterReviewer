@@ -35,6 +35,11 @@ func (handle *Handle) CORSGetImages() http.HandlerFunc {
 }
 
 
+func (handle *Handle) CORSGetBase64Images() http.HandlerFunc {
+    return corsMiddleware(handle.getBase64Images)
+}
+
+
 func (handle *Handle) CORSSavePendingReview() http.HandlerFunc {
 	return corsMiddleware(handle.savePendingReview)
 }

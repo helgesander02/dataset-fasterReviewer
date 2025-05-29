@@ -79,6 +79,31 @@ func (handle *Handle) getImages(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    images := handle.DM.GetParentDataAllImages(jobName, datasetName)
+    result := map[string]interface{}{
+        "total_images": len(images),
+        "images":       images,
+    }
+    writeJSON(w, http.StatusOK, result)
+}
+
+
+func (handle *Handle) getBase64Images(w http.ResponseWriter, r *http.Request) {
+    if !requireMethod(w, r, http.MethodGet) {
+        return
+    }
+
+    jobName := r.URL.Query().Get("job")
+    datasetName := r.URL.Query().Get("dataset")
+    if jobName == "" || datasetName == "" {
+        http.Error(w, "Missing job or dataset parameter", http.StatusBadRequest)
+        return
+    }
+    if !handle.DM.JobExists(jobName) {
+        http.Error(w, "Job not found", http.StatusNotFound)
+        return
+    }
+
     cachedImages, exists := handle.DM.GetImagesCache(jobName, datasetName)
     if  exists {
         writeJSON(w, http.StatusOK, cachedImages)

@@ -59,6 +59,18 @@ export const fetchImages = async (job: string, dataset: string) => {
     }
 };
 
+export const fetchBase64Images = async (job: string, dataset: string) => {
+    try {
+        const response = await api.get('/api/getBase64Images', { params: { job, dataset } });
+        console.log(`Fetching base64 images for job ${job} and dataset ${dataset}`);
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching base64 images:', error);
+        throw error;
+    }
+};
+
 export const buildUrl = (path: string) => `${api.defaults.baseURL}${path}`;
 
 export const getImageUrl = (job: string, dataset: string, imageName: string) =>

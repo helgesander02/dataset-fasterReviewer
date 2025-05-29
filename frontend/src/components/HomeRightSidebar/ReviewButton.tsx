@@ -1,11 +1,7 @@
 import { Eye } from 'lucide-react';
+import { ReviewButtonProps } from '@/types/HomeRightSidebar';
 
-interface ActionButtonsProps {
-  onReview: () => void;
-  loading: boolean;
-}
-
-export default function ActionButtons({ onReview, loading }: ActionButtonsProps) {
+export default function ReviewButton({ onReview, loading }: ReviewButtonProps) {
   return (
     <div className="action-buttons">
       <button 

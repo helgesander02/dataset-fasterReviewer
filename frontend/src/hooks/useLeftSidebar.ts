@@ -2,22 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { fetchJobs, fetchDatasets } from '@/services/api';
-import { useJobDataset } from './JobDatasetContext';
-import JobSelect from './LeftJobSelect';
-import DatasetGrid from './LeftDatasetGrid';
-import Pagination from './LeftPagination';
-import LoadingIndicator from './LeftLoadingIndicator';
-import '@/styles/HomeLeftSidebar.css';
+import { datasetsPerPage } from '@/services/config';
+import { useJobDataset } from '@/components/JobDatasetContext';
+import { SidebarState, SidebarActions } from '@/types/HomeLeftSidebar';
 
-export default function LeftSidebar() {
+export function useLeftSidebar(): SidebarState & SidebarActions {
   const [jobs, setJobs] = useState<string[]>([]);
   const [datasets, setDatasets] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const datasetsPerPage = 80;
-
   const { selectedJob, selectedDataset, setSelectedJob, setSelectedDataset } = useJobDataset();
 
+  // Load jobs on component mount
   useEffect(() => {
     const loadJobs = async () => {
       try {
@@ -30,14 +26,14 @@ export default function LeftSidebar() {
         setLoading(false);
       }
     };
-
     loadJobs();
   }, []);
 
+  // Load datasets when job changes
   useEffect(() => {
     const loadDatasets = async () => {
       if (!selectedJob) return;
-
+      
       try {
         setLoading(true);
         const response = await fetchDatasets(selectedJob);
@@ -55,7 +51,7 @@ export default function LeftSidebar() {
     };
 
     loadDatasets();
-  }, [selectedJob]);
+  }, [selectedJob, setSelectedDataset]);
 
   const handleJobSelect = (job: string) => {
     setSelectedJob(job);
@@ -79,31 +75,16 @@ export default function LeftSidebar() {
     }
   };
 
-  return (
-    <div className="sidebar-container">
-      <div className="sidebar-header">
-        <p className="sidebar-title">Image Verify Viewer</p>
-      </div>
-      <JobSelect jobs={jobs} selectedJob={selectedJob} onJobSelect={handleJobSelect} loading={loading} />
-      {selectedJob && (
-        <DatasetGrid
-          datasets={datasets}
-          selectedDataset={selectedDataset}
-          onDatasetSelect={handleDatasetSelect}
-          currentPage={currentPage} 
-          datasetsPerPage={datasetsPerPage}
-        />
-      )}
-      {datasets.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalDatasets={datasets.length}
-          datasetsPerPage={datasetsPerPage} 
-          onPrevious={previousPage}
-          onNext={nextPage}
-        />
-      )}
-      {loading && <LoadingIndicator />}
-    </div>
-  );
+  return {
+    // State
+    jobs,
+    datasets,
+    loading,
+    currentPage,
+    // Actions
+    handleJobSelect,
+    handleDatasetSelect,
+    previousPage,
+    nextPage
+  };
 }
