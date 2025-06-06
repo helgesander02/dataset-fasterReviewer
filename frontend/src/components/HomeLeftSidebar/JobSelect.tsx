@@ -3,7 +3,11 @@
 import React from 'react';
 import { JobSelectProps } from '@/types/HomeLeftSidebar';
 
-export default function JobSelect({ jobs, selectedJob, onJobSelect, loading }: JobSelectProps) {
+export default function JobSelect({ 
+  jobs, selectedJob, loading,
+  onJobSelect 
+}: JobSelectProps) {
+  
   return (
     <div className="job-select-container">
       <select 

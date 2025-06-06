@@ -1,16 +1,13 @@
 package services
 
-
 import (
-	"log"
 	"backend/models"
+	"log"
 )
-
 
 func (dm *DataManager) GetParentDataAllJobs() []string {
 	return dm.ParentData.Jobs
 }
-
 
 func (dm *DataManager) GetParentDataAllDatasets(jobName string) []string {
 	job, exists := dm.ConcurrentJobDetailsScanner(jobName)
@@ -26,7 +23,6 @@ func (dm *DataManager) GetParentDataAllDatasets(jobName string) []string {
 
 	return datasetNames
 }
-
 
 func (dm *DataManager) GetParentDataAllImages(jobName, datasetName string) []models.Image {
 	job, exists := dm.ConcurrentJobDetailsScanner(jobName)
@@ -49,7 +45,6 @@ func (dm *DataManager) GetParentDataAllImages(jobName, datasetName string) []mod
 
 	return images
 }
-
 
 func (dm *DataManager) JobExists(jobName string) bool {
 	for _, j := range dm.ParentData.Jobs {

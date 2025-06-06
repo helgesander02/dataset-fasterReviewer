@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { fetchDatasets, fetchImages } from '@/services/api';
 import { useJobDataset } from '@/components/JobDatasetContext';
-import InfiniteImageGrid from '@/components/HomeInfinitelmageGrid';
+import InfiniteImageGrid from '@/components/HomeImageGrid/InfinitelmageGrid';
 
 export default function Home() {
-  const { selectedJob } = useJobDataset();
+  const { selectedJob, selectedDataset, setSelectedDataset } = useJobDataset();
   const [totalDatasets, setTotalDatasets] = useState<number>(0);
 
   useEffect(() => {
@@ -34,6 +34,8 @@ export default function Home() {
     <div className="main-container">
       <InfiniteImageGrid 
         selectedJob={selectedJob}
+        selectedDataset={selectedDataset}
+        setSelectedDataset={setSelectedDataset}
       />
     </div>
   );

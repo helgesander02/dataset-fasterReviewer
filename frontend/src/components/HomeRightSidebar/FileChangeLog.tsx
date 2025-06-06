@@ -1,12 +1,14 @@
 import { FileText } from 'lucide-react';
 import { FileChangeLogProps } from '@/types/HomeRightSidebar';
 
-export default function FileChangeLog({ groupedImages, cachedImages }: FileChangeLogProps) {
+export default function FileChangeLog({ 
+  groupedImages, cachedImages 
+}: FileChangeLogProps) {
+
   return (
     <div className="change-log">
       <div className="title">
-        <FileText size={16} />
-        File Change Log
+        <FileText size={16} /> File Change Log
       </div>
       
       {cachedImages.length === 0 ? (
@@ -24,7 +26,7 @@ export default function FileChangeLog({ groupedImages, cachedImages }: FileChang
               <div className="file-list">
                 {images.map((img, index) => (
                   <div key={index} className="file-item">
-                    • {img.imagePath.split('/').pop()}
+                    • {img.imageName}
                   </div>
                 ))}
               </div>

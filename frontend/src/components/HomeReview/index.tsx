@@ -1,26 +1,21 @@
 "use client";
 
-import { HomeReviewProps } from '@/types/HomeReview';
-import { useHomeReview } from '@/hooks/useHomeReview';
 import { ReviewHeader } from './ReviewHeader';
 import { ReviewContent } from './ReviewContent';
 import { ReviewActions } from './ReviewActions';
+import { HomeReviewProps } from '@/types/HomeReview';
+import { useHomeReview } from '@/hooks/useHomeReview';
 import '@/styles/HomeReview.css';
 
-export default function HomeReview({ isOpen, onClose }: HomeReviewProps) {
-  const {
-    reviewData,
-    loading,
-    error,
-    selectedImages,
-    saving,
-    fetchPendingReview,
-    saveToPendingReview,
-    toggleImageSelection,
-    selectAllImages,
-    deselectAllImages
-  } = useHomeReview(isOpen);
+export default function HomeReview({ 
+  isOpen, onClose 
+}: HomeReviewProps) {
 
+  const {
+    reviewData, loading, error, selectedImages, saving,
+    fetchPendingReview, saveToPendingReview, toggleImageSelection,
+    selectAllImages, deselectAllImages
+  } = useHomeReview(isOpen);
   if (!isOpen) return null;
 
   const hasImages = reviewData && reviewData.items.length > 0;

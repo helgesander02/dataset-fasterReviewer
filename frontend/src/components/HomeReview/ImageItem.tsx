@@ -1,16 +1,13 @@
 "use client";
 
 import { Check, ImageIcon } from 'lucide-react';
-import { ReviewItem } from '@/types/HomeReview';
+import { ImageItemProps } from '@/types/HomeReview';
 
-interface ImageItemProps {
-  item: ReviewItem;
-  index: number;
-  isSelected: boolean;
-  onToggle: (item: ReviewItem) => void;
-}
+export function ImageItem({ 
+  item, index, isSelected, 
+  onToggle 
+}: ImageItemProps) {
 
-export function ImageItem({ item, index, isSelected, onToggle }: ImageItemProps) {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.style.display = 'none';
     const fallback = e.currentTarget.nextElementSibling as HTMLElement;

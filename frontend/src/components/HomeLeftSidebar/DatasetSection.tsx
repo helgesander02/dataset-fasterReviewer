@@ -2,40 +2,30 @@
 
 import React from 'react';
 import DatasetGrid from './DatasetGrid';
-import Pagination from './Pagination';
-import { datasetsPerPage } from '@/services/config';
-
-interface DatasetSectionProps {
-  datasets: string[];
-  selectedDataset: string;
-  onDatasetSelect: (dataset: string) => void;
-  currentPage: number;
-  onPrevious: () => void;
-  onNext: () => void;
-}
+import Pagination from './DatasetPagination';
+import { DATASET_PER_PAGE } from '@/services/config';
+import { DatasetSectionProps } from '@/types/HomeLeftSidebar';
 
 export function DatasetSection({
-  datasets,
-  selectedDataset,
-  onDatasetSelect,
-  currentPage,
-  onPrevious,
-  onNext
+  currentPage, datasets, selectedDataset,
+  onDatasetSelect, onPrevious, onNext
 }: DatasetSectionProps) {
+  
   return (
     <>
       <DatasetGrid
+        currentPage={currentPage}
+        datasetsPerPage={DATASET_PER_PAGE}
         datasets={datasets}
         selectedDataset={selectedDataset}
         onDatasetSelect={onDatasetSelect}
-        currentPage={currentPage} 
-        datasetsPerPage={datasetsPerPage}
       />
+
       {datasets.length > 0 && (
         <Pagination
           currentPage={currentPage}
           totalDatasets={datasets.length}
-          datasetsPerPage={datasetsPerPage} 
+          datasetsPerPage={DATASET_PER_PAGE} 
           onPrevious={onPrevious}
           onNext={onNext}
         />

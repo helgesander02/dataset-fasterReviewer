@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { getPendingReview, savePendingReview } from '@/services/api';
 import { useJobDataset } from '@/components/JobDatasetContext';
+import { getPendingReview, savePendingReview } from '@/services/api';
 import { PendingReviewData, ReviewItem } from '@/types/HomeReview';
 
 export function useHomeReview(isOpen: boolean) {
   const { cachedImages, addImageToCache, removeImageFromCache } = useJobDataset();
-  
-  // State management
   const [reviewData, setReviewData] = useState<PendingReviewData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,9 +37,11 @@ export function useHomeReview(isOpen: boolean) {
       setError(null);
       const data = await getPendingReview(true);
       setReviewData(data);
+
     } catch (err) {
       console.error('Error fetching pending review:', err);
       setError('Unable to load the data to be reviewed, please try again later.');
+
     } finally {
       setLoading(false);
     }
@@ -63,8 +63,10 @@ export function useHomeReview(isOpen: boolean) {
       };
 
       await savePendingReview(saveData);
+
     } catch (err) {
       console.error('Error saving pending review:', err);
+      
     } finally {
       setSaving(false);
     }

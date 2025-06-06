@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { fetchJobs, fetchDatasets } from '@/services/api';
-import { datasetsPerPage } from '@/services/config';
 import { useJobDataset } from '@/components/JobDatasetContext';
+import { fetchJobs, fetchDatasets } from '@/services/api';
+import { DATASET_PER_PAGE } from '@/services/config';
 import { SidebarState, SidebarActions } from '@/types/HomeLeftSidebar';
 
 export function useLeftSidebar(): SidebarState & SidebarActions {
@@ -20,8 +20,11 @@ export function useLeftSidebar(): SidebarState & SidebarActions {
         setLoading(true);
         const response = await fetchJobs();
         setJobs(response.job_names || []);
+
       } catch (error) {
         console.error('Unable to load job:', error);
+        alert('Unable to load jobs, please try again later.');
+
       } finally {
         setLoading(false);
       }
@@ -45,6 +48,8 @@ export function useLeftSidebar(): SidebarState & SidebarActions {
         }
       } catch (error) {
         console.error('Unable to load dataset:', error);
+        alert('Unable to load datasets, please try again later.');
+
       } finally {
         setLoading(false);
       }
@@ -53,9 +58,11 @@ export function useLeftSidebar(): SidebarState & SidebarActions {
     loadDatasets();
   }, [selectedJob, setSelectedDataset]);
 
+  //  Handle job and dataset selection
   const handleJobSelect = (job: string) => {
     setSelectedJob(job);
     setSelectedDataset('');
+    console.log(`Job selected: ${job}`);
   };
 
   const handleDatasetSelect = (dataset: string) => {
@@ -63,6 +70,7 @@ export function useLeftSidebar(): SidebarState & SidebarActions {
     console.log(`Dataset selected: ${dataset}`);
   };
 
+  // Pagination logic
   const previousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -70,18 +78,16 @@ export function useLeftSidebar(): SidebarState & SidebarActions {
   };
 
   const nextPage = () => {
-    if ((currentPage + 1) * datasetsPerPage < datasets.length) {
+    if ((currentPage + 1) * DATASET_PER_PAGE < datasets.length) {
       setCurrentPage(currentPage + 1);
     }
   };
 
   return {
-    // State
     jobs,
     datasets,
     loading,
     currentPage,
-    // Actions
     handleJobSelect,
     handleDatasetSelect,
     previousPage,

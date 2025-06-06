@@ -1,15 +1,13 @@
 "use client";
 
-import { ReviewItem } from '@/types/HomeReview';
 import { ImageItem } from './ImageItem';
+import { ImagesGridProps } from '@/types/HomeReview';
 
-interface ImagesGridProps {
-  items: ReviewItem[];
-  selectedImages: Set<string>;
-  onToggleImage: (item: ReviewItem) => void;
-}
-
-export function ImagesGrid({ items, selectedImages, onToggleImage }: ImagesGridProps) {
+export function ImagesGrid({ 
+  items, selectedImages, 
+  onToggleImage 
+}: ImagesGridProps) {
+  
   return (
     <div className="home-review-images-grid">
       {items.map((item, index) => {

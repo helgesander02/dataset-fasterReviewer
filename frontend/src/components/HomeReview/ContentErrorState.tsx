@@ -12,8 +12,7 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
       <button 
         onClick={onRetry}
         className="home-review-retry-btn"
-      >
-        Reload
+      > Reload 
       </button>
     </div>
   );

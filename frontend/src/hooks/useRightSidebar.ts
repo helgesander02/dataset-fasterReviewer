@@ -11,8 +11,11 @@ export function useRightSidebar(): RightSidebarState & RightSidebarActions {
   const [loading, setLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  // Function to handle saving pending review
   const handleSave = async () => {
     if (!selectedJob || !selectedDataset || cachedImages.length === 0) {
+      console.log('No job, dataset, or images selected for saving.');
+      alert('Please select a job, dataset, and ensure there are images to save.');
       return;
     }
 
@@ -26,6 +29,7 @@ export function useRightSidebar(): RightSidebarState & RightSidebarActions {
         images: cachedImages.map(img => ({
           job: img.job,
           dataset: img.dataset,
+          imageName: img.imageName,
           imagePath: img.imagePath
         })),
         timestamp: new Date().toISOString()
@@ -41,11 +45,13 @@ export function useRightSidebar(): RightSidebarState & RightSidebarActions {
     } catch (error) {
       console.error('Error saving pending review:', error);
       alert('Save failed! Please try again later');
+
     } finally {
       setLoading(false);
     }
   };
 
+  // Function to handle opening the review modal
   const handleReview = () => {
     setIsReviewOpen(true);
   };
@@ -54,8 +60,9 @@ export function useRightSidebar(): RightSidebarState & RightSidebarActions {
     setIsReviewOpen(false);
   };
 
+  // Group cached images by job and dataset
   const groupedImages = cachedImages.reduce((acc, img) => {
-    const key = `${img.job}/${img.dataset}`;
+    const key = `${img.job}`;
     if (!acc[key]) {
       acc[key] = [];
     }
@@ -64,12 +71,10 @@ export function useRightSidebar(): RightSidebarState & RightSidebarActions {
   }, {} as Record<string, CachedImage[]>);
 
   return {
-    // State
     isReviewOpen,
     loading,
     saveSuccess,
     groupedImages,
-    // Actions
     handleSave,
     handleReview,
     handleCloseReview

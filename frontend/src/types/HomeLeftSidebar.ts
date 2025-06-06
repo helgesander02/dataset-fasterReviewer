@@ -1,16 +1,25 @@
 export interface JobSelectProps {
     jobs: string[];
     selectedJob: string;
-    onJobSelect: (job: string) => void;
     loading: boolean;
+    onJobSelect: (job: string) => void;
+}
+
+export interface DatasetSectionProps {
+    currentPage: number; 
+    datasets: string[]; 
+    selectedDataset: string;
+    onDatasetSelect: (dataset: string) => void; 
+    onPrevious: () => void; 
+    onNext: () => void;
 }
 
 export interface DatasetGridProps {
+    currentPage: number;
+    datasetsPerPage: number;
     datasets: string[];
     selectedDataset: string;
     onDatasetSelect: (dataset: string) => void;
-    currentPage: number;
-    datasetsPerPage: number;
 }
 
 export interface PaginationProps {

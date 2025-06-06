@@ -4,12 +4,10 @@ import React from 'react';
 import { DatasetGridProps } from '@/types/HomeLeftSidebar';
 
 export default function DatasetGrid({ 
-  datasets, 
-  selectedDataset, 
-  onDatasetSelect, 
-  currentPage, 
-  datasetsPerPage 
+  currentPage, datasetsPerPage, datasets, selectedDataset, 
+  onDatasetSelect 
 }: DatasetGridProps) {
+
   const getCurrentPageDatasets = () => {
     const startIndex = currentPage * datasetsPerPage;
     return datasets.slice(startIndex, startIndex + datasetsPerPage);

@@ -1,6 +1,9 @@
 import { StatusProps } from '@/types/HomeRightSidebar';
 
-export default function Status({ selectedJob, selectedDataset }: StatusProps) {
+export default function Status({ 
+  selectedJob, selectedDataset 
+}: StatusProps) {
+  
   return (
     <div className="status">
       {selectedJob && selectedDataset ? (

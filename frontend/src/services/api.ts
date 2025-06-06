@@ -59,12 +59,14 @@ export const fetchImages = async (job: string, dataset: string) => {
     }
 };
 
-export const fetchBase64Images = async (job: string, dataset: string) => {
+export const fetchBase64Images = async (job: string, dataset: string, pageIndex: number, pageNumber: number) => {
     try {
-        const response = await api.get('/api/getBase64Images', { params: { job, dataset } });
-        console.log(`Fetching base64 images for job ${job} and dataset ${dataset}`);
+        const response = await api.get('/api/getBase64Images', { params: { job, dataset, pageIndex, pageNumber } });
         console.log(response.data);
-        return response.data;
+        return {
+            maxPage: response.data.max_page, // 解析 max_page
+            images: response.data.images,
+        };
     } catch (error) {
         console.error('Error fetching base64 images:', error);
         throw error;

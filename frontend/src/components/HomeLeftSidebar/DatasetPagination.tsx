@@ -4,12 +4,10 @@ import React from 'react';
 import { PaginationProps } from '@/types/HomeLeftSidebar';
 
 export default function Pagination({ 
-  currentPage, 
-  totalDatasets, 
-  datasetsPerPage, 
-  onPrevious, 
-  onNext 
+  currentPage, totalDatasets, datasetsPerPage, 
+  onPrevious, onNext 
 }: PaginationProps) {
+
   const isFirstPage = currentPage === 0;
   const isLastPage = (currentPage + 1) * datasetsPerPage >= totalDatasets;
   

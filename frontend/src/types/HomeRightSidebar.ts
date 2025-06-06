@@ -1,6 +1,7 @@
 export interface CachedImage {
   job: string;
   dataset: string;
+  imageName: string;
   imagePath: string;
 }
 
@@ -10,6 +11,7 @@ export interface SaveData {
   images: Array<{
     job: string;
     dataset: string;
+    imageName: string;
     imagePath: string;
   }>;
   timestamp: string;
@@ -21,16 +23,16 @@ export interface FileChangeLogProps {
 }
 
 export interface ReviewButtonProps {
-  onReview: () => void;
   loading: boolean;
+  onReview: () => void;
 }
 
 export interface SaveButtonProps {
-  onSave: () => void;
   loading: boolean;
   saveSuccess: boolean;
   cachedImages: CachedImage[];
   disabled: boolean;
+  onSave: () => void;
 }
 
 export interface StatusProps {

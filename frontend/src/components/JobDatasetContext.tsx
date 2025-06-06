@@ -7,6 +7,7 @@ import { getPendingReview } from '@/services/api';
 interface CachedImage {
   job: string;
   dataset: string;
+  imageName: string;
   imagePath: string;
 }
 
@@ -16,7 +17,7 @@ interface JobDatasetContextType {
   setSelectedJob: (job: string) => void;
   setSelectedDataset: (dataset: string) => void;
   cachedImages: CachedImage[];
-  addImageToCache: (job: string, dataset: string, imagePath: string) => void;
+  addImageToCache: (job: string, dataset: string, imageName:string, imagePath: string) => void;
   removeImageFromCache: (imagePath: string) => void;
   getCache: (job: string, dataset: string) => string[];
 }
@@ -33,7 +34,7 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
       try {
         const data = await getPendingReview(true);
         data.items.forEach((item: CachedImage) => {
-          addImageToCache(item.job, item.dataset, item.imagePath);
+          addImageToCache(item.job, item.dataset, item.imageName, item.imagePath);
         });
       } catch (error) {
         console.error('Error loading pending review on init:', error);
@@ -43,13 +44,13 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
     loadPending();
   }, []);
 
-  const addImageToCache = (job: string, dataset: string, imagePath: string) => {
+  const addImageToCache = (job: string, dataset: string, imageName: string, imagePath: string) => {
     const exists = cachedImages.some(
       img => img.job === job && img.dataset === dataset && img.imagePath === imagePath
     );
 
     if (!exists) {
-      const newCachedImage: CachedImage = { job, dataset, imagePath };
+      const newCachedImage: CachedImage = { job, dataset, imageName, imagePath };
       setCachedImages(prev => [newCachedImage, ...prev]);
     }
   };

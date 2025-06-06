@@ -1,28 +1,16 @@
 "use client";
 
-import { PendingReviewData, ReviewItem } from '@/types/HomeReview';
-import { LoadingState } from './LoadingState';
-import { ErrorState } from './ErrorState';
-import { EmptyState } from './EmptyState';
+import { LoadingState } from './ContentLoadingState';
+import { ErrorState } from './ContentErrorState';
+import { EmptyState } from './ContentEmptyState';
 import { ImagesGrid } from './ImagesGrid';
-
-interface ReviewContentProps {
-  loading: boolean;
-  error: string | null;
-  reviewData: PendingReviewData | null;
-  selectedImages: Set<string>;
-  onRetry: () => void;
-  onToggleImage: (item: ReviewItem) => void;
-}
+import { ReviewContentProps } from '@/types/HomeReview';
 
 export function ReviewContent({ 
-  loading, 
-  error, 
-  reviewData, 
-  selectedImages, 
-  onRetry, 
-  onToggleImage 
+  loading, error, reviewData, selectedImages, 
+  onRetry, onToggleImage 
 }: ReviewContentProps) {
+
   const hasImages = reviewData && reviewData.items.length > 0;
 
   return (

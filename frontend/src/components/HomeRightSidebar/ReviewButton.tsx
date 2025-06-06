@@ -1,7 +1,10 @@
 import { Eye } from 'lucide-react';
 import { ReviewButtonProps } from '@/types/HomeRightSidebar';
 
-export default function ReviewButton({ onReview, loading }: ReviewButtonProps) {
+export default function ReviewButton({ 
+  loading, onReview 
+}: ReviewButtonProps) {
+  
   return (
     <div className="action-buttons">
       <button 

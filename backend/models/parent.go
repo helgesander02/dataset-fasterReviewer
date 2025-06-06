@@ -1,6 +1,5 @@
 package models
 
-
 func NewParentData() Parent {
 	return Parent{
 		Jobs: []string{},
@@ -23,8 +22,8 @@ func NewDataset(dataset_name string) Dataset {
 }
 
 func NewImage(image_name string, image_path string) Image {
-    return Image{
-        Name: image_name,
-        Path: image_path,
-    }
+	return Image{
+		Name: image_name,
+		Path: image_path,
+	}
 }

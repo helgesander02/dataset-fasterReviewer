@@ -1,24 +1,18 @@
 "use client";
 
 import { useJobDataset } from '../JobDatasetContext';
-import { useLeftSidebar } from '@/hooks/useLeftSidebar';
 import { SidebarHeader } from './SidebarHeader';
 import JobSelect from './JobSelect';
 import { DatasetSection } from './DatasetSection';
 import LoadingIndicator from './LoadingIndicator';
+import { useLeftSidebar } from '@/hooks/useLeftSidebar';
 import '@/styles/HomeLeftSidebar.css';
 
 export default function LeftSidebar() {
   const { selectedJob, selectedDataset } = useJobDataset();
   const {
-    jobs,
-    datasets,
-    loading,
-    currentPage,
-    handleJobSelect,
-    handleDatasetSelect,
-    previousPage,
-    nextPage
+    jobs, datasets, loading, currentPage,
+    handleJobSelect, handleDatasetSelect, previousPage,nextPage
   } = useLeftSidebar();
 
   return (
@@ -28,16 +22,16 @@ export default function LeftSidebar() {
       <JobSelect 
         jobs={jobs} 
         selectedJob={selectedJob} 
-        onJobSelect={handleJobSelect} 
         loading={loading} 
+        onJobSelect={handleJobSelect} 
       />
       
       {selectedJob && (
         <DatasetSection
+          currentPage={currentPage}
           datasets={datasets}
           selectedDataset={selectedDataset}
           onDatasetSelect={handleDatasetSelect}
-          currentPage={currentPage}
           onPrevious={previousPage}
           onNext={nextPage}
         />
