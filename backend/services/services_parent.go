@@ -46,7 +46,7 @@ func (dm *DataManager) GetParentDataAllImages(jobName, datasetName string) []mod
 	return images
 }
 
-func (dm *DataManager) JobExists(jobName string) bool {
+func (dm *DataManager) ParentDataJobExists(jobName string) bool {
 	for _, j := range dm.ParentData.Jobs {
 		if j == jobName {
 			return true

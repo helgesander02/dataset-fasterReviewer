@@ -29,6 +29,7 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
   const [selectedDataset, setSelectedDataset] = useState<string>('');
   const [cachedImages, setCachedImages] = useState<CachedImage[]>([]);
 
+  // Load pending review images on initial render
   useEffect(() => {
     async function loadPending() {
       try {
@@ -44,9 +45,10 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
     loadPending();
   }, []);
 
+  // Function to add an image to the cache
   const addImageToCache = (job: string, dataset: string, imageName: string, imagePath: string) => {
     const exists = cachedImages.some(
-      img => img.job === job && img.dataset === dataset && img.imagePath === imagePath
+      img => img.job === job && img.dataset === dataset && img.imagePath === imagePath && img.imageName === imageName
     );
 
     if (!exists) {
@@ -55,6 +57,7 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Function to remove an image from the cache
   const removeImageFromCache = (imagePath: string) => {
     setCachedImages(prev => prev.filter(img => img.imagePath !== imagePath));
   };

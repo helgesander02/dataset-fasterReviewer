@@ -12,11 +12,10 @@ export const metadata: Metadata = {
   description: 'A simple image viewer for verification',
 };
 
-export default function RootLayout({
-  children,
-}: {
+export default function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <html lang="en">
       <body className={inter.className}>

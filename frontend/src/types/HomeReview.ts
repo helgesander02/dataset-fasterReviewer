@@ -1,6 +1,7 @@
 export interface ReviewItem {
     job: string;
     dataset: string;
+    imageName: string;
     imagePath: string;
 }
 

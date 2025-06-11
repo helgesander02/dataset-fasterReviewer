@@ -73,11 +73,19 @@ export const fetchBase64Images = async (job: string, dataset: string, pageIndex:
     }
 };
 
-export const buildUrl = (path: string) => `${api.defaults.baseURL}${path}`;
-
-export const getImageUrl = (job: string, dataset: string, imageName: string) =>
-    buildUrl(`/static/${job}/${dataset}/image/${imageName}`);
-
+export const fetchALLPages = async (job: string) => {
+    if (!job) {
+        throw new Error('The "job" parameter is required to fetch all pages.');
+    }
+    try {
+        const response = await api.get('/api/getAllPages', { params: { job } });
+        console.log(`Fetched all pages for job ${job}:`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching all pages:', error);
+        throw error;
+    }
+};
 
 export const savePendingReview = async (data: any) => {
     try {

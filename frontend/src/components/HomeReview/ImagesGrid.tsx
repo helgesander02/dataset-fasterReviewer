@@ -11,7 +11,7 @@ export function ImagesGrid({
   return (
     <div className="home-review-images-grid">
       {items.map((item, index) => {
-        const isSelected = selectedImages.has(item.imagePath);
+        const isSelected = selectedImages.has(item.imageName);
         return (
           <ImageItem
             key={`${item.imagePath}-${index}`}

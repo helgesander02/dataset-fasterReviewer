@@ -38,7 +38,7 @@ func (handle *Handle) getDatasets(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Missing job parameter", http.StatusBadRequest)
 		return
 	}
-	if !handle.DM.JobExists(jobName) {
+	if !handle.DM.ParentDataJobExists(jobName) {
 		http.Error(w, "Job not found", http.StatusNotFound)
 		return
 	}
@@ -62,7 +62,7 @@ func (handle *Handle) getImages(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Missing job or dataset parameter", http.StatusBadRequest)
 		return
 	}
-	if !handle.DM.JobExists(jobName) {
+	if !handle.DM.ParentDataJobExists(jobName) {
 		http.Error(w, "Job not found", http.StatusNotFound)
 		return
 	}
@@ -89,7 +89,7 @@ func (handle *Handle) getBase64Images(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Missing job or dataset parameter", http.StatusBadRequest)
 		return
 	}
-	if !handle.DM.JobExists(jobName) {
+	if !handle.DM.ParentDataJobExists(jobName) {
 		http.Error(w, "Job not found", http.StatusNotFound)
 		return
 	}
@@ -119,6 +119,29 @@ func (handle *Handle) getBase64Images(w http.ResponseWriter, r *http.Request) {
 	result := map[string]interface{}{
 		"max_page": handle.DM.ImagesPerPageCache.MaxPage, // 傳遞 MaxPage
 		"images":   cachedImages,
+	}
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (handle *Handle) getAllPages(w http.ResponseWriter, r *http.Request) {
+	if !requireMethod(w, r, http.MethodGet) {
+		return
+	}
+
+	jobName := r.URL.Query().Get("job")
+	if jobName == "" {
+		http.Error(w, "Missing job parameter", http.StatusBadRequest)
+		return
+	}
+	if !handle.DM.ImageCacheJobExists(jobName) {
+		http.Error(w, "Job not found", http.StatusNotFound)
+		return
+	}
+
+	pages := handle.DM.GetAllPageDetail()
+	result := map[string]interface{}{
+		"total_pages": len(pages),
+		"pages":       pages,
 	}
 	writeJSON(w, http.StatusOK, result)
 }

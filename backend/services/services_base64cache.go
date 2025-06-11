@@ -16,6 +16,20 @@ import (
 	"github.com/nfnt/resize"
 )
 
+func (dm *DataManager) GetAllPageDetail() map[int]string {
+	log.Println("Fetching all page details from ImagesPerPageCache")
+	if dm.ImagesPerPageCache.JobName == "" {
+		log.Println("ImagesPerPageCache is not initialized")
+		return nil
+	}
+
+	detail := make(map[int]string)
+	for idx, page := range dm.ImagesPerPageCache.Pages {
+		detail[idx] = page.DatasetName
+	}
+	return detail
+}
+
 func (dm *DataManager) InitialImagesCache(jobName string, pageNumber int) {
 	dm.ImagesPerPageCache = models.NewImagesPerPageCache()
 	log.Println("Cleared images cache")
@@ -37,7 +51,6 @@ func (dm *DataManager) InitialImagesCache(jobName string, pageNumber int) {
 		}
 	}
 	log.Printf("Initialized images cache for job %s with page size %d", jobName, pageNumber)
-
 }
 
 func (dm *DataManager) SaveImagesCache(jobName string, item models.ImageItems) {
@@ -114,4 +127,12 @@ func compressImages(imgPath string) string {
 	}
 
 	return base64.StdEncoding.EncodeToString(buf.Bytes())
+}
+
+func (dm *DataManager) ImageCacheJobExists(jobName string) bool {
+	if dm.ImagesPerPageCache.JobName == "" {
+		log.Println("ImagesPerPageCache is not initialized")
+		return false
+	}
+	return dm.ImagesPerPageCache.JobName == jobName
 }

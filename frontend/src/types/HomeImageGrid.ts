@@ -1,3 +1,23 @@
+export interface InfiniteImageGridProps {
+    selectedJob: string | null;
+    selectedDataset: string | null;
+    currentPage: number;
+    setSelectedDataset: (dataset: string) => void;
+    setCurrentPage: (page: number) => void;
+}
+
+export interface UseInfiniteImagesReturn {
+    allImagePages: ImagePage[];
+    loading: boolean;
+    currentPageIndex: number; 
+    getCurrentImagePages: () => ImagePage[];
+    hasMorePages: () => boolean;
+    loadNextPage: () => Promise<void>;
+    resetImages: () => void;
+    initializeImages: () => Promise<void>;
+    registerPageElement: (pageIndex: number, element: HTMLElement | null) => void; 
+}
+
 export interface Image {
     name: string;
     url: string;
@@ -25,12 +45,6 @@ export interface LoadingStateProps {
 
 export interface SelectionIndicatorProps {
     className?: string;
-}
-
-export interface InfiniteImageGridProps {
-    selectedJob: string | null;
-    selectedDataset: string | null;
-    setSelectedDataset: (dataset: string) => void;
 }
 
 export interface ImagePage {

@@ -25,8 +25,8 @@ export function useHomeReview(isOpen: boolean) {
   // Sync selected images with cached images
   useEffect(() => {
     if (reviewData?.items) {
-      const cachedImagePaths = new Set(cachedImages.map(img => img.imagePath));
-      setSelectedImages(cachedImagePaths);
+      const cachedImageName = new Set(cachedImages.map(img => img.imageName));
+      setSelectedImages(cachedImageName);
     }
   }, [reviewData, cachedImages]);
 
@@ -57,6 +57,7 @@ export function useHomeReview(isOpen: boolean) {
         images: cachedImages.map(img => ({
           job: img.job,
           dataset: img.dataset,
+          imageName: img.imageName,
           imagePath: img.imagePath
         })),
         timestamp: new Date().toISOString()
@@ -74,13 +75,13 @@ export function useHomeReview(isOpen: boolean) {
 
   // Toggle individual image selection
   const toggleImageSelection = async (item: ReviewItem) => {
-    const { job, dataset, imagePath } = item;
-    const isCurrentlySelected = selectedImages.has(imagePath);
+    const { job, dataset, imageName, imagePath } = item;
+    const isCurrentlySelected = selectedImages.has(imageName);
     
     if (isCurrentlySelected) {
       removeImageFromCache(imagePath);
     } else {
-      addImageToCache(job, dataset, imagePath);
+      addImageToCache(job, dataset, imageName, imagePath);
     }
   };
 
@@ -89,7 +90,7 @@ export function useHomeReview(isOpen: boolean) {
     if (!reviewData?.items) return;
     
     reviewData.items.forEach(item => {
-      addImageToCache(item.job, item.dataset, item.imagePath);
+      addImageToCache(item.job, item.dataset, item.imageName, item.imagePath);
     });
   };
 
