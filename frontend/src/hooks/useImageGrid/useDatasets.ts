@@ -3,10 +3,14 @@
 import { useState, useEffect } from 'react';
 import { fetchDatasets } from '@/services/api';
 
-export function useDatasets(selectedJob: string | null) {
+export function useDatasets(
+  selectedJob: string | null
+) {
+
   const [allDatasets, setAllDatasets] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // This effect fetches datasets when the selected job changes
   useEffect(() => {
     const loadDatasets = async () => {
       if (!selectedJob) {

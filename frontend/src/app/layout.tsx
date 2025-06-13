@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
+
+import { JobDatasetProvider } from '@/components/JobDatasetContext';
 import LeftSidebar from '@/components/HomeLeftSidebar/index';
 import RightSidebar from '@/components/HomeRightSidebar/index';
-import { JobDatasetProvider } from '@/components/JobDatasetContext';
+
 
 const inter = Inter({ subsets: ['latin'] });
 

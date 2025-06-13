@@ -1,33 +1,35 @@
 "use client";
 
 import React from 'react';
-import DatasetGrid from './DatasetGrid';
-import Pagination from './DatasetPagination';
 import { DATASET_PER_PAGE } from '@/services/config';
 import { DatasetSectionProps } from '@/types/HomeLeftSidebar';
 
+import DatasetGrid from './DatasetGrid';
+import Pagination from './DatasetPagination';
+
+
 export function DatasetSection({
-  currentPage, datasets, selectedDataset,
+  currentPagenation, currentDatasets, selectedDataset,
   onDatasetSelect, onPrevious, onNext
 }: DatasetSectionProps) {
   
   return (
     <>
       <DatasetGrid
-        currentPage={currentPage}
-        datasetsPerPage={DATASET_PER_PAGE}
-        datasets={datasets}
-        selectedDataset={selectedDataset}
-        onDatasetSelect={onDatasetSelect}
+        currentPagenation = {currentPagenation}
+        datasetsPerPage   = {DATASET_PER_PAGE}
+        currentDatasets   = {currentDatasets}
+        selectedDataset   = {selectedDataset}
+        onDatasetSelect   = {onDatasetSelect}
       />
 
-      {datasets.length > 0 && (
+      {currentDatasets.length > 0 && (
         <Pagination
-          currentPage={currentPage}
-          totalDatasets={datasets.length}
-          datasetsPerPage={DATASET_PER_PAGE} 
-          onPrevious={onPrevious}
-          onNext={onNext}
+          currentPagenation = {currentPagenation}
+          totalDatasets     = {currentDatasets.length}
+          datasetsPerPage   = {DATASET_PER_PAGE} 
+          onPrevious        = {onPrevious}
+          onNext            = {onNext}
         />
       )}
     </>

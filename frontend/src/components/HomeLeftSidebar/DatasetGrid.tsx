@@ -4,13 +4,13 @@ import React from 'react';
 import { DatasetGridProps } from '@/types/HomeLeftSidebar';
 
 export default function DatasetGrid({ 
-  currentPage, datasetsPerPage, datasets, selectedDataset, 
+  currentPagenation, datasetsPerPage, currentDatasets, selectedDataset, 
   onDatasetSelect 
 }: DatasetGridProps) {
 
   const getCurrentPageDatasets = () => {
-    const startIndex = currentPage * datasetsPerPage;
-    return datasets.slice(startIndex, startIndex + datasetsPerPage);
+    const startIndex = currentPagenation * datasetsPerPage;
+    return currentDatasets.slice(startIndex, startIndex + datasetsPerPage);
   };
 
   return (
@@ -21,12 +21,12 @@ export default function DatasetGrid({
           const isSelected = dataset === selectedDataset;
           return (
             <div 
-              key={dataset} 
-              className={`dataset-item ${isSelected ? 'dataset-item-selected' : ''}`}
-              onClick={() => onDatasetSelect(dataset)}
-              title={dataset}
+              key       = {dataset} 
+              className = {`dataset-item ${isSelected ? 'dataset-item-selected' : ''}`}
+              onClick   = {() => onDatasetSelect(dataset)}
+              title     = {dataset}
             >
-              {i + 1 + currentPage * datasetsPerPage}
+              {i + 1 + currentPagenation * datasetsPerPage}
             </div>
           );
         })}

@@ -36,6 +36,9 @@ export function useHomeReview(isOpen: boolean) {
       setLoading(true);
       setError(null);
       const data = await getPendingReview(true);
+      if (!data || !Array.isArray(data.items)) {
+        throw new Error('Invalid data format');
+      }
       setReviewData(data);
 
     } catch (err) {

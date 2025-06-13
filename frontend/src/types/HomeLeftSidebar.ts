@@ -1,45 +1,50 @@
-export interface JobSelectProps {
-    jobs: string[];
-    selectedJob: string;
-    loading: boolean;
-    onJobSelect: (job: string) => void;
-}
-
-export interface DatasetSectionProps {
-    currentPage: number; 
-    datasets: string[]; 
-    selectedDataset: string;
-    onDatasetSelect: (dataset: string) => void; 
-    onPrevious: () => void; 
-    onNext: () => void;
-}
-
-export interface DatasetGridProps {
-    currentPage: number;
-    datasetsPerPage: number;
-    datasets: string[];
-    selectedDataset: string;
-    onDatasetSelect: (dataset: string) => void;
-}
-
-export interface PaginationProps {
-    currentPage: number;
-    totalDatasets: number;
-    datasetsPerPage: number;
-    onPrevious: () => void;
-    onNext: () => void;
-}
-
+// useLeftSidebar.ts
 export interface SidebarState {
-    jobs: string[];
-    datasets: string[];
-    loading: boolean;
-    currentPage: number;
+    currentJobs:            string[];
+    currentDatasets:        string[];
+    currentPagenation:      number;
+    loading:                boolean;  
 }
 
 export interface SidebarActions {
-    handleJobSelect: (job: string) => void;
-    handleDatasetSelect: (dataset: string) => void;
-    previousPage: () => void;
-    nextPage: () => void;
+    handleJobSelect:        (job: string) => void;
+    handleDatasetSelect:    (dataset: string) => void;
+    previousPage:           () => void;
+    nextPage:               () => void;
+}
+
+// JobSelect.ts
+export interface JobSelectProps {
+    currentJobs:            string[];
+    selectedJob:            string;
+    loading:                boolean;
+    onJobSelect:            (job: string) => void;
+}
+
+// DatasetSection.ts
+export interface DatasetSectionProps {
+    currentPagenation:      number; 
+    currentDatasets:        string[]; 
+    selectedDataset:        string;
+    onDatasetSelect:        (dataset: string) => void; 
+    onPrevious:             () => void; 
+    onNext:                 () => void;
+}
+
+// DatasetGrid.ts
+export interface DatasetGridProps {
+    currentPagenation:      number;
+    datasetsPerPage:        number;
+    currentDatasets:        string[];
+    selectedDataset:        string;
+    onDatasetSelect:        (dataset: string) => void;
+}
+
+// DatasetPagination.ts
+export interface PaginationProps {
+    currentPagenation:      number;
+    totalDatasets:          number;
+    datasetsPerPage:        number;
+    onPrevious:             () => void;
+    onNext:                 () => void;
 }

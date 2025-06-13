@@ -4,7 +4,7 @@ import { ReviewHeader } from './ReviewHeader';
 import { ReviewContent } from './ReviewContent';
 import { ReviewActions } from './ReviewActions';
 import { HomeReviewProps } from '@/types/HomeReview';
-import { useHomeReview } from '@/hooks/useHomeReview';
+import { useHomeReview } from '@/hooks/useRightSidebar/useReview';
 import '@/styles/HomeReview.css';
 
 export default function HomeReview({ 

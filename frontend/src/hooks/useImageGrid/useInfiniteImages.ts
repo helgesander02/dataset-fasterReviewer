@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect, use } from 'react';
-import { fetchBase64Images, fetchALLPages } from '@/services/api';
-import { IMAGES_PER_PAGE } from '@/services/config';
-import { Image, ImagePage } from '@/types/HomeImageGrid';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { fetchALLPages } from '@/services/api';
+import { ImagePage } from '@/types/HomeImageGrid';
+import { usePageObserver } from './usePageObserver';
+import { useImagePageLoader } from './useImagePageLoader';
 
 export function useInfiniteImages(
   selectedJob: string | null, selectedDataset: string | null, allDatasets: string[], currentPage: number,
-  setSelectedDataset: (dataset: string) => void, setCurrentPage: (page: number) => void) {
+  setSelectedDataset: (dataset: string) => void, setCurrentPage: (page: number) => void
+) {
 
   const [maxPageIndex, setMaxPageIndex] = useState<number>(0); 
   const [allImagePages, setAllImagePages] = useState<ImagePage[]>([]);
@@ -15,12 +17,12 @@ export function useInfiniteImages(
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [currentDatasetIndex, setCurrentDatasetIndex] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const loadedPagesRef = useRef<Set<string>>(new Set());
   
   const [currentJobDatasetKey, setCurrentJobDatasetKey] = useState<string>('');
   const isInitializingRef = useRef<boolean>(false);
 
-  const pageObserversRef = useRef<Map<number, IntersectionObserver>>(new Map());
+  const { registerPageElement, cleanupObservers } = usePageObserver();
+  const { loadPageImages, clearLoadedPages } = useImagePageLoader();
 
   const updateCurrentPageIndex = useCallback((newPageIndex: number) => {
     if (newPageIndex !== currentPageIndex) {
@@ -29,49 +31,16 @@ export function useInfiniteImages(
     }
   }, [currentPageIndex, setCurrentPage]);
 
-  const setupPageObserver = useCallback((pageIndex: number, element: HTMLElement) => {
-    if (pageObserversRef.current.has(pageIndex)) {
-      return;
-    }
+  // This function registers the page element for the infinite scroll functionality
+  const registerPageElementWithCallback = useCallback((pageIndex: number, element: HTMLElement | null) => {
+    registerPageElement(pageIndex, element, updateCurrentPageIndex);
+  }, [registerPageElement, updateCurrentPageIndex]);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-            updateCurrentPageIndex(pageIndex);
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5
-      }
-    );
-
-    observer.observe(element);
-    pageObserversRef.current.set(pageIndex, observer);
-  }, [updateCurrentPageIndex]);
-
-  // 清理觀察器的函數
-  const cleanupObservers = useCallback(() => {
-    pageObserversRef.current.forEach((observer) => {
-      observer.disconnect();
-    });
-    pageObserversRef.current.clear();
-  }, []);
-
-  // 註冊頁面元素的函數
-  const registerPageElement = useCallback((pageIndex: number, element: HTMLElement | null) => {
-    if (element) {
-      setupPageObserver(pageIndex, element);
-    }
-  }, [setupPageObserver]);
-
+  // This effect updates the current dataset index based on the current page index
   useEffect(() => {
     const fetchCurrentDatasetByCurrentPage = async () => {
       try {
-        if (currentPageIndex < 0 || !selectedJob || !selectedDataset) {
+        if (currentPageIndex <= 0 || !selectedJob || !selectedDataset) {
           console.warn('Invalid page index or no job selected, skipping dataset detail fetch.');
           return;
         }
@@ -86,44 +55,9 @@ export function useInfiniteImages(
     };
 
     fetchCurrentDatasetByCurrentPage();
-  }, [currentPageIndex]);
+  }, [currentPageIndex, selectedJob, selectedDataset, setSelectedDataset]);
 
-  const loadPageImages = useCallback(async (job: string, dataset: string, pageIndex: number) => {
-    const pageKey = `${dataset}-${pageIndex}`;
-    
-    if (loadedPagesRef.current.has(pageKey)) {
-      console.log(`Page ${pageKey} already loaded, skipping...`);
-      return null;
-    }
-
-    try {
-      console.log(`Loading page ${pageIndex} for dataset ${dataset}...`);
-      const response = await fetchBase64Images(job, dataset, pageIndex, IMAGES_PER_PAGE);
-      console.log(`Loaded page ${pageIndex} for dataset ${dataset}:`, response);
-      
-      if (response && response.images.base64_image_set && response.images.base64_image_set.length > 0) {
-        const pageImages: Image[] = response.images.base64_image_set.map((image: { name: string, path: string }) => ({
-          name: image.name,
-          url: `data:image/webp;base64,${image.path}`,
-          dataset: dataset
-        }));
-
-        const imagePage: ImagePage = {
-          dataset: dataset,
-          images: pageImages,
-          isNewDataset: pageIndex === 0
-        };
-
-        loadedPagesRef.current.add(pageKey);
-        return { imagePage, maxPage: response.maxPage };
-      }
-      return null;
-    } catch (error) {
-      console.error(`Error loading page ${pageIndex} for dataset ${dataset}:`, error);
-      return null;
-    }
-  }, []);
-
+  // This function resets the images and clears all observers
   const resetImages = useCallback(() => {
     console.log('Resetting images...');
     cleanupObservers();
@@ -133,10 +67,11 @@ export function useInfiniteImages(
     setHasMore(true);
     setCurrentJobDatasetKey('');
     setMaxPageIndex(0);
-    loadedPagesRef.current.clear();
+    clearLoadedPages();
     isInitializingRef.current = false;
-  }, [cleanupObservers]);
+  }, [cleanupObservers, clearLoadedPages]);
 
+  // This function initializes the images for the selected job and datasets
   const initializeImages = useCallback(async () => {
     if (!selectedJob || allDatasets.length === 0) {
       resetImages();
@@ -165,7 +100,7 @@ export function useInfiniteImages(
       setCurrentPageIndex(0);
       setCurrentDatasetIndex(0);
       setHasMore(true);
-      loadedPagesRef.current.clear();
+      clearLoadedPages();
       
       const firstDataset = allDatasets[0];
       const firstPage = await loadPageImages(selectedJob, firstDataset, 0);
@@ -191,8 +126,9 @@ export function useInfiniteImages(
       setLoading(false);
       isInitializingRef.current = false;
     }
-  }, [selectedJob, allDatasets, loadPageImages, currentJobDatasetKey, resetImages, cleanupObservers, setCurrentPage]);
+  }, [selectedJob, allDatasets, loadPageImages, currentJobDatasetKey, resetImages, cleanupObservers, clearLoadedPages, setCurrentPage]);
 
+  // This effect initializes images when the selected job or datasets change
   useEffect(() => {
     if (selectedJob && allDatasets.length > 0) {
       const newJobDatasetKey = `${selectedJob}-${allDatasets.join(',')}-${allDatasets.length}`;
@@ -204,8 +140,9 @@ export function useInfiniteImages(
     } else if (!selectedJob) {
       resetImages();
     }
-  }, [selectedJob, allDatasets, currentJobDatasetKey]);
+  }, [selectedJob, allDatasets, currentJobDatasetKey, initializeImages, resetImages]);
 
+  // This function loads the next page of images for the current dataset
   const loadNextPage = useCallback(async () => {
     if (!selectedJob || loading || !hasMore || currentDatasetIndex >= allDatasets.length || isInitializingRef.current) {
       return;
@@ -215,11 +152,13 @@ export function useInfiniteImages(
       setLoading(true);
       const currentDataset = allDatasets[currentDatasetIndex];
       const nextPageIndex = currentPageIndex + 1;
+      
       if (nextPageIndex >= maxPageIndex && maxPageIndex > 0) {
         console.warn(`No more pages available for dataset ${currentDataset} at index ${currentDatasetIndex}`);
         setHasMore(false);
         return;
       }
+      
       const response = await loadPageImages(selectedJob, currentDataset, nextPageIndex);
       if (response) {
         const { imagePage, maxPage } = response;
@@ -238,7 +177,7 @@ export function useInfiniteImages(
     } finally {
       setLoading(false);
     }
-  }, [selectedJob, loading, hasMore, currentDatasetIndex, currentPageIndex, allDatasets, loadPageImages]);
+  }, [selectedJob, loading, hasMore, currentDatasetIndex, currentPageIndex, allDatasets, loadPageImages, maxPageIndex]);
 
   const getCurrentImagePages = useCallback(() => {
     return allImagePages;
@@ -263,6 +202,6 @@ export function useInfiniteImages(
     loadNextPage,
     resetImages,
     initializeImages,
-    registerPageElement
+    registerPageElement: registerPageElementWithCallback
   };
 }

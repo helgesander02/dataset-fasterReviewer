@@ -2,10 +2,10 @@
 
 import React, { useEffect, useRef } from 'react';
 import { InfiniteImageGridProps } from '@/types/HomeImageGrid';
-import { useDatasets } from '@/hooks/useDatasets';
-import { useInfiniteImages } from '@/hooks/useInfiniteImages';
-import { useImageSelection } from '@/hooks/useImageSelection';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { useDatasets } from '@/hooks/useImageGrid/useDatasets';
+import { useInfiniteImages } from '@/hooks/useImageGrid/useInfiniteImages';
+import { useImageSelection } from '@/hooks/useImageGrid/useImageSelection';
+import { useIntersectionObserver } from '@/hooks/useImageGrid/useIntersectionObserver';
 import HomeImageGrid from './ImageGrid';
 import EmptyState from './EmptyState';
 import LoadingState from './LoadingState';
@@ -20,23 +20,20 @@ export default function InfiniteImageGrid({
   const { allDatasets, loading: datasetsLoading } = useDatasets(selectedJob); 
   const {
     loading: imagesLoading,
-    getCurrentImagePages,
-    hasMorePages,
-    loadNextPage,
-    resetImages,
-    registerPageElement
+    getCurrentImagePages, hasMorePages, loadNextPage, resetImages,registerPageElement
   } = useInfiniteImages(selectedJob, selectedDataset, allDatasets, currentPage, setSelectedDataset, setCurrentPage);
   
   const { selectedImages, handleImageClick } = useImageSelection(selectedJob, allDatasets);
   const loadingRef = useIntersectionObserver(loadNextPage, imagesLoading);
 
-  // 註冊頁面元素到觀察器
+  // This function registers the page element for the infinite scroll functionality
   const setPageRef = (pageIndex: number) => (element: HTMLDivElement | null) => {
     if (element) {
       registerPageElement(pageIndex, element);
     }
   };
 
+  // Reset images when the selected job changes or becomes null
   useEffect(() => {
     if (!selectedJob) {
       resetImages();
@@ -45,12 +42,10 @@ export default function InfiniteImageGrid({
 
   if (!selectedJob) {
     return <EmptyState />;
-  }
-  
+  } 
   if (datasetsLoading || (allDatasets.length === 0 && datasetsLoading)) {
     return <LoadingState message="Loading datasets..." />;
   }
-
   if (allDatasets.length === 0) {
     return (
       <EmptyState 
@@ -59,7 +54,6 @@ export default function InfiniteImageGrid({
       />
     );
   }
-
   const currentImagePages = getCurrentImagePages();
   
   return (
@@ -82,7 +76,7 @@ export default function InfiniteImageGrid({
               </div>
             ))}
             
-            {hasMorePages() && (
+            {hasMorePages() && imagesLoading && (
               <div ref={loadingRef}>
                 <LoadingTrigger isLoading={imagesLoading} />
               </div>

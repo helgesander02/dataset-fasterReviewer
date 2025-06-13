@@ -2,10 +2,10 @@
 
 import React, { useEffect, useRef } from 'react';
 import { InfiniteImageGridProps } from '@/types/HomeImageGrid';
-import { useDatasets } from '@/hooks/useDatasets';
-import { useInfiniteImages } from '@/hooks/useInfiniteImages';
-import { useImageSelection } from '@/hooks/useImageSelection';
-import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { useDatasets } from '@/hooks/useImageGrid/useDatasets';
+import { useInfiniteImages } from '@/hooks/useImageGrid/useInfiniteImages';
+import { useImageSelection } from '@/hooks/useImageGrid/useImageSelection';
+import { useIntersectionObserver } from '@/hooks/useImageGrid/useIntersectionObserver';
 import HomeImageGrid from './ImageGrid';
 import EmptyState from './EmptyState';
 import LoadingState from './LoadingState';

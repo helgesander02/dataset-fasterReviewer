@@ -1,33 +1,36 @@
 "use client";
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { getPendingReview } from '@/services/api';
-
-
-interface CachedImage {
-  job: string;
-  dataset: string;
-  imageName: string;
-  imagePath: string;
-}
-
-interface JobDatasetContextType {
-  selectedJob: string;
-  selectedDataset: string;
-  setSelectedJob: (job: string) => void;
-  setSelectedDataset: (dataset: string) => void;
-  cachedImages: CachedImage[];
-  addImageToCache: (job: string, dataset: string, imageName:string, imagePath: string) => void;
-  removeImageFromCache: (imagePath: string) => void;
-  getCache: (job: string, dataset: string) => string[];
-}
+import { CachedImage, JobDatasetContextType } from '@/types/JobDatasetContext';
+import { getPendingReview, fetchALLPages } from '@/services/api';
 
 const JobDatasetContext = createContext<JobDatasetContextType | undefined>(undefined);
 
+/**
+ * JobDatasetProvider component provides context for managing job and dataset state.
+ * It fetches pending review images on initial render and updates job pages when selectedJob changes.
+ * 
+ * props:
+ * - children: ReactNode - The child components that will have access to this context.
+ * * This context includes:
+ * - selectedJob:           string - The currently selected job.
+ * - selectedDataset:       string - The currently selected dataset.
+ * - currentPage:           number - The current page of datasets being displayed.
+ * - setSelectedJob:        function - Function to set the selected job.
+ * - setSelectedDataset:    function - Function to set the selected dataset.
+ * - setCurrentPage:        function - Function to set the current page.
+ * - cachedImages:          CachedImage[] - Array of cached images for the selected job and dataset.
+ * - addImageToCache:       function - Function to add an image to the cache.
+ * - removeImageFromCache:  function - Function to remove an image from the cache.
+ * - getCache:              function - Function to retrieve cached images for a specific job and dataset.
+ * - jobPages:              string[] - Array of pages for the selected job.
+ */
 export function JobDatasetProvider({ children }: { children: ReactNode }) {
   const [selectedJob, setSelectedJob] = useState<string>('');
   const [selectedDataset, setSelectedDataset] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [cachedImages, setCachedImages] = useState<CachedImage[]>([]);
+  const [jobPages, setJobPages] = useState<string[]>([]);
 
   // Load pending review images on initial render
   useEffect(() => {
@@ -38,12 +41,35 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
           addImageToCache(item.job, item.dataset, item.imageName, item.imagePath);
         });
       } catch (error) {
-        console.error('Error loading pending review on init:', error);
+        throw new Error('Error loading pending review: ' + error);
       }
     }
 
     loadPending();
   }, []);
+
+  // Fetch job pages when selectedJob changes
+  useEffect(() => {
+    async function fetchJobPages() {
+      if (!selectedJob) {
+        setJobPages([]);
+        return;
+      }
+
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // wait backend to be ready
+        const response = await fetchALLPages(selectedJob);
+        const pages = Array.isArray(response.pages) ? response.pages : Object.values(response.pages);
+        setJobPages(pages);
+
+      } catch (error) {
+        setJobPages([]);
+        throw new Error('Error fetching job pages: ' + error);
+      }
+    }
+
+    fetchJobPages();
+  }, [selectedJob]);
 
   // Function to add an image to the cache
   const addImageToCache = (job: string, dataset: string, imageName: string, imagePath: string) => {
@@ -73,12 +99,15 @@ export function JobDatasetProvider({ children }: { children: ReactNode }) {
       value={{
         selectedJob,
         selectedDataset,
+        currentPage,
         setSelectedJob,
         setSelectedDataset,
+        setCurrentPage,
         cachedImages,
         addImageToCache,
         removeImageFromCache,
         getCache,
+        jobPages,
       }}
     >
       {children}
